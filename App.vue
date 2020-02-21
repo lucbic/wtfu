@@ -1,34 +1,53 @@
 <template>
-  <view class="container">
-    <text class="text-color-primary">My Vue Native App</text>
-      <!-- <accordion
-        :data-array="accordionItems"
-        :expanded="accordionExpanded"
-      /> -->
+  <view class="wtfu-app">
+    <app-loading v-if="!isAppReady" />
+
+    <main-view v-else />
   </view>
 </template>
 
 <script>
+import Vue from 'vue-native-core'
+import * as Font from "expo-font"
+import MainView from './views/Main.vue'
+import { VueNativeBase } from 'native-base'
+import { AppLoading } from "expo"
+
+// registering all native-base components to the global scope of the Vue
+Vue.use(VueNativeBase)
+
 export default {
+  components: { AppLoading, MainView },
+
   data: () => ({
-    accordionItems: [
-      { title: 'kibe', content: 'frito'},
-      { title: 'coxinha', content: 'frita'},
-      { title: 'esfirra', content: 'assada'},
-    ],
-    accordionExpanded: false
-  })
+    isAppReady: false
+  }),
+
+  methods: {
+    async loadFonts() {
+      try {
+        this.isAppReady = false
+        await Font.loadAsync({
+          Roboto: require("./node_modules/native-base/Fonts/Roboto.ttf"),
+          Roboto_medium: require("./node_modules/native-base/Fonts/Roboto_medium.ttf"),
+          Ionicons: require("./node_modules/@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf")
+        })
+        this.isAppReady = true
+      } catch (error) {
+        console.log("some error occured", error)
+        this.isAppReady = true
+      }
+    }
+  },
+
+  created () {
+    this.loadFonts()
+  }
 }
 </script>
 
 <style>
-.container {
-  background-color: white;
-  align-items: center;
-  justify-content: center;
+.wtfu-app {
   flex: 1;
-}
-.text-color-primary {
-  color: blue;
 }
 </style>
