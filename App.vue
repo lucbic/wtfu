@@ -2,22 +2,22 @@
   <view class="wtfu-app">
     <app-loading v-if="!isAppReady" />
 
-    <main-view v-else />
+    <app-navigation v-else />
   </view>
 </template>
 
 <script>
 import Vue from 'vue-native-core'
-import * as Font from "expo-font"
-import MainView from './views/Main.vue'
+import * as Font from 'expo-font'
+import AppNavigation from './router/AppNavigation.vue'
 import { VueNativeBase } from 'native-base'
-import { AppLoading } from "expo"
+import { AppLoading } from 'expo'
 
 // registering all native-base components to the global scope of the Vue
 Vue.use(VueNativeBase)
 
 export default {
-  components: { AppLoading, MainView },
+  components: { AppLoading, AppNavigation },
 
   data: () => ({
     isAppReady: false

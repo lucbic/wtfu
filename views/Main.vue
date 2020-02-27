@@ -6,8 +6,22 @@
       </nb-body>
     </nb-header>
 
-    <nb-content class="wtfu__content">
-     
+    <nb-content class="wtfu__content" padder>
+     <nb-card v-for="card in cards" :key="card.id">
+        <nb-card-item>
+          <nb-left>
+            <nb-text>{{ getTime(card) }}</nb-text>
+          </nb-left>
+
+          <nb-body>
+            <nb-text>{{ card.label }}</nb-text>
+          </nb-body>
+
+          <nb-right>
+            <nb-switch :value="card.active"/>
+          </nb-right>
+        </nb-card-item >
+     </nb-card>
     </nb-content>
 
      <nb-button
@@ -20,21 +34,45 @@
         :onPress="onAddPress"
       >
         <nb-icon name="add"/>
-        <nb-text>{{ `${numberX}` }}</nb-text>
       </nb-button>
   </nb-container>
 </template>
 
 <script>
+const cardsMock = [
+  {
+    id: 0,
+    label: 'Teste',
+    timeSet: {
+      hours: 21,
+      minutes: 30
+    },
+    active: true
+  },
+  {
+    id: 1,
+    label: 'Teste 2',
+    timeSet: {
+      hours: 9,
+      minutes: 0
+    },
+    active: true
+  }
+]
+
 export default {
-   data: () => ({
-    numberX: 0
+  name: 'MainView',
+
+  data: () => ({
+    numberX: 0,
+    cards: cardsMock
   }),
 
   methods: {
-    onAddPress () {
-      console.log('PREIS')
-      this.numberX++
+    onAddPress () { this.numberX++ },
+
+    getTime ({ timeSet }) {
+      return `${timeSet.hours}:${timeSet.minutes}`
     }
   }
   
@@ -42,9 +80,11 @@ export default {
 </script>
 
 <style>
+.wtfu_app { flex: 1; }
+
 .wtfu__content {
   position: relative;
-  background-color: cyan;
+  background-color: grey;
 }
 
 .wtfu_add-button {
