@@ -7,18 +7,18 @@
     </nb-header>
 
     <nb-content class="wtfu__content" padder>
-     <nb-card v-for="card in cards" :key="card.id">
+     <nb-card v-for="alarm in alarms" :key="alarm.id">
         <nb-card-item>
           <nb-left>
-            <nb-text>{{ getTime(card) }}</nb-text>
+            <nb-text>{{ getTime(alarm) }}</nb-text>
           </nb-left>
 
           <nb-body>
-            <nb-text>{{ card.label }}</nb-text>
+            <nb-text>{{ alarm.label }}</nb-text>
           </nb-body>
 
           <nb-right>
-            <nb-switch :value="card.active"/>
+            <nb-switch :value="alarm.active"/>
           </nb-right>
         </nb-card-item >
      </nb-card>
@@ -39,34 +39,20 @@
 </template>
 
 <script>
-const cardsMock = [
-  {
-    id: 0,
-    label: 'Teste',
-    timeSet: {
-      hours: 21,
-      minutes: 30
-    },
-    active: true
-  },
-  {
-    id: 1,
-    label: 'Teste 2',
-    timeSet: {
-      hours: 9,
-      minutes: 0
-    },
-    active: true
-  }
-]
+import { mapState } from 'vuex'
 
 export default {
   name: 'MainView',
 
   data: () => ({
     numberX: 0,
-    cards: cardsMock
   }),
+
+  computed: {
+    ...mapState([
+      'alarms'
+    ])
+  },
 
   methods: {
     onAddPress () { this.numberX++ },

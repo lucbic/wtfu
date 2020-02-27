@@ -8,6 +8,7 @@
 
 <script>
 import Vue from 'vue-native-core'
+import Store from './store'
 import * as Font from 'expo-font'
 import AppNavigation from './router/AppNavigation.vue'
 import { VueNativeBase } from 'native-base'
@@ -15,6 +16,9 @@ import { AppLoading } from 'expo'
 
 // registering all native-base components to the global scope of the Vue
 Vue.use(VueNativeBase)
+
+// register vuex store in vue prototype
+Vue.prototype.$store = Store
 
 export default {
   components: { AppLoading, AppNavigation },
