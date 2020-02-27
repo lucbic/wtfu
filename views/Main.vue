@@ -1,12 +1,6 @@
 <template>
   <nb-container>
-    <nb-header :style="{ backgroundColor: 'orange' }">
-      <nb-body>
-        
-      </nb-body>
-    </nb-header>
-
-    <nb-content class="wtfu__content" padder>
+    <nb-content class="wtfu__content">
      <nb-card v-for="alarm in alarms" :key="alarm.id">
         <nb-card-item>
           <nb-left>
@@ -44,8 +38,11 @@ import { mapState } from 'vuex'
 export default {
   name: 'MainView',
 
+  props: {
+    navigation: Object
+  },
+
   data: () => ({
-    numberX: 0,
   }),
 
   computed: {
@@ -55,7 +52,9 @@ export default {
   },
 
   methods: {
-    onAddPress () { this.numberX++ },
+    onAddPress () {
+      this.navigation.navigate('SetNewAlarmView')
+    },
 
     getTime ({ timeSet }) {
       return `${timeSet.hours}:${timeSet.minutes}`
