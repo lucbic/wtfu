@@ -1,21 +1,34 @@
 import Vue from 'vue-native-core'
 import Vuex from 'vuex'
 import { AsyncStorage } from 'react-native';
+import { generateUUID } from './modules/helpers'
 
 // mocked data:
-import mockedAlarms from './mock/alarms'
+// import mockedAlarms from './mock/alarms'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    // alarms: []
-
-    // mocked data:
-    alarms: mockedAlarms
+    alarms: []
   },
+
   mutations: {
-    setNewAlarm: (state, data) => {
+    setNewAlarm: ({ alarms }, { label, hours, minutes }) => {
+      const newAlarm = {
+        id: generateUUID(),
+        label,
+        timeSet: { hours, minutes },
+        active: true
+      }
+
+      alarms.push(newAlarm)
+    },
+
+    toggleAlarm: ({ alarms }, alarmId) => {
+      const alarm = alarms.find(({ id }) => id === alarmId)
+
+      if (alarm) alarm.active = !alarm.active
     }
   },
 
@@ -25,8 +38,8 @@ const store = new Vuex.Store({
         const persistedStore = await AsyncStorage.getItem('store')
 
         if (persistedStore) {
-          this.replaceState(Object.assign(state, JSON.parse(persistedStore)))
-          alert('There is persisted store data')
+          const parsedStore = JSON.parse(persistedStore)
+          store.replaceState(parsedStore)
         }
       } catch (error) { throw error }
     }

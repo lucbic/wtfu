@@ -12,7 +12,10 @@
           </nb-body>
 
           <nb-right>
-            <nb-switch :value="alarm.active"/>
+            <nb-switch
+              :value="alarm.active"
+              :on-change="() => onSwitch(alarm.id)"
+            />
           </nb-right>
         </nb-card-item >
      </nb-card>
@@ -20,11 +23,7 @@
 
      <nb-button
         class="wtfu_add-button"
-        success
-        large
         rounded
-        icon-left
-        type="Ionicons"
         :onPress="onAddPress"
       >
         <nb-icon name="add"/>
@@ -33,7 +32,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
+
+const parseTime = val => {
+   const stringed = val.toString()
+   return stringed.length === 1 ? '0' + stringed : stringed
+}
 
 export default {
   name: 'MainView',
@@ -52,12 +56,24 @@ export default {
   },
 
   methods: {
+    ...mapMutations([
+      'toggleAlarm'
+    ]),
+
     onAddPress () {
       this.navigation.navigate('SetNewAlarmView')
     },
 
+    onSwitch (id) {
+      this.toggleAlarm(id)
+    },
+
     getTime ({ timeSet }) {
-      return `${timeSet.hours}:${timeSet.minutes}`
+      const { hours, minutes } = timeSet
+      const parsedHours = parseTime(hours)
+      const parsedMinutes = parseTime(minutes)
+
+      return `${parsedHours}:${parsedMinutes}`
     }
   }
   
@@ -69,12 +85,13 @@ export default {
 
 .wtfu__content {
   position: relative;
-  background-color: grey;
+  padding: 20px;
+  background-color:lightslategray;
 }
 
 .wtfu_add-button {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   position: absolute;
   bottom: 20px;
   right: 20px;

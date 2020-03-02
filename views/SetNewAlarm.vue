@@ -1,89 +1,126 @@
 <template>
   <nb-container>
     <nb-content class="wtfu__set-new-alarm-content">
-      <!-- <nb-form> -->
-        <nb-picker
-          :selectedValue="hourSelected"
-          :onValueChange="onHourChange"
-        >
-          <item
-            v-for="(value, label) in defaultHours"
-            :label="label"
-            :value="value"
-            :key="label"
-          />
-        </nb-picker>
+      <nb-view>
+        <nb-view :style="{ display: 'flex', flexDirection: 'row' }">
+          <nb-label :style="{ flex: 1 }">
+            Horas
+          </nb-label>
+          <nb-label :style="{ flex: 1 }">
+            Minutos
+          </nb-label>
+        </nb-view>
 
-        <nb-picker
-          :selectedValue="minuteSelected"
-          :onValueChange="onMinuteChange"
-        >
-          <item
-            v-for="(value, label) in defaultMinutes"
-            :label="label"
-            :value="value"
-            :key="label"
-          />
-        </nb-picker>
-      <!-- </nb-form> -->
-      
+        <nb-form :style="{ display: 'flex', flexDirection: 'row' }" >
+          <nb-picker
+            :selectedValue="hourSelected"
+            :onValueChange="onHourChange"
+            :style="{ flex: 1 }"
+            mode="dropdown"
+            prompt="hora"
+          >
+            <nb-item
+              v-for="({ key, value}) in defaultHours"
+              :label="key"
+              :value="value"
+              :key="key"
+            />
+          </nb-picker>
+
+          <nb-picker
+            :selectedValue="minuteSelected"
+            :onValueChange="onMinuteChange"
+            :style="{ flex: 1 }"
+            mode="dropdown"
+            prompt="minutos"
+          >
+            <nb-item
+              v-for="({ key, value}) in defaultMinutes"
+              :label="key"
+              :value="value"
+              :key="key"
+            />
+          </nb-picker>
+        </nb-form>
+
+        <nb-form>
+          <nb-item last>
+            <nb-input
+              v-model="label"
+              placeholder="Etiqueta"
+            />
+          </nb-item>
+        </nb-form>
+      </nb-view>
+
+      <nb-button
+        large
+        icon-left
+        :style="{ marginTop: 40 }"
+        :onPress="onAddPress"
+      >
+        <nb-icon name="add"/>
+
+        <nb-text>
+          Adicionar alarme
+        </nb-text>
+      </nb-button>
     </nb-content>
   </nb-container>
 </template>
 
 <script>
-const defaultHours = {
-  '00': 0,
-  '01': 1,
-  '02': 2,
-  '03': 3,
-  '04': 4,
-  '05': 5,
-  '06': 6,
-  '07': 7,
-  '08': 8,
-  '09': 9,
-  '10': 10,
-  '11': 11,
-  '12': 12,
-  '13': 13,
-  '14': 14,
-  '15': 15,
-  '16': 16,
-  '17': 17,
-  '18': 18,
-  '19': 19,
-  '20': 20,
-  '21': 21,
-  '22': 22,
-  '23': 23
-}
+import { mapMutations } from 'vuex'
+import { defaultHours, defaultMinutes } from '../content/timePickerData'
 
 export default {
   name: 'SetNewAlarmView',
 
+  props: {
+    navigation: Object
+  },
+
   data: () => ({
-    numberX: 0,
     hourSelected: 0,
     minuteSelected: 0,
+    label: '',
     defaultHours,
-    defaultMinutes: defaultHours
+    defaultMinutes
   }),
 
   computed: {
+    formData () {
+      return {
+        label: this.label,
+        hours: this.hourSelected,
+        minutes: this.minuteSelected
+      }
+    }
   },
 
   methods: {
+    ...mapMutations([
+      'setNewAlarm'
+    ]),
+
     onHourChange (newHour) {
       this.hourSelected = newHour
     },
     onMinuteChange (newMinute) {
       this.minuteSelected = newMinute
+    },
+    onAddPress () {
+      this.setNewAlarm(this.formData)
+      this.navigation.navigate('MainView')
     }
   }
 }
 </script>
 
 <style>
-
+.wtfu__set-new-alarm-content {
+  flex: 1;
+  padding: 20px;
+  background-color:lightslategray;
+}
 </style>
