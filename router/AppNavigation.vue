@@ -9,12 +9,12 @@ import {
 } from 'vue-native-router'
 
 import MainView from '../views/Main'
-import SetNewAlarmView from '../views/SetNewAlarm'
+import SetAlarmView from '../views/SetAlarm'
 
 const StackNavigator = createStackNavigator(
   {
     MainView: { screen: MainView },
-    SetNewAlarmView: { screen: SetNewAlarmView }
+    SetAlarmView: { screen: SetAlarmView }
   },
   {
     initialRouteName: 'MainView'

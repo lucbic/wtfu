@@ -13,6 +13,12 @@ const store = new Vuex.Store({
     alarms: []
   },
 
+  getters: {
+    getAlarm: state => id => {
+      return state.alarms.find(alarm => alarm.id === id)
+    }
+  },
+
   mutations: {
     setNewAlarm: ({ alarms }, { label, hours, minutes }) => {
       const newAlarm = {
@@ -29,6 +35,20 @@ const store = new Vuex.Store({
       const alarm = alarms.find(({ id }) => id === alarmId)
 
       if (alarm) alarm.active = !alarm.active
+    },
+
+    deleteAlarm: ({ alarms }, alarmId) => {
+      const alarm = alarms.find(({ id }) => id === alarmId)
+
+      if (alarm)
+        alarms.splice(alarms.indexOf(alarm), 1)
+    },
+
+    editAlarm: ({ alarms }, { id: alarmId, label, timeSet }) => {
+      const alarm = alarms.find(({ id }) => id === alarmId)
+
+      alarm.label = label
+      alarm.timeSet = timeSet
     }
   },
 

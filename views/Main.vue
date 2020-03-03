@@ -1,24 +1,30 @@
 <template>
   <nb-container>
     <nb-content class="wtfu__content">
-     <nb-card v-for="alarm in alarms" :key="alarm.id">
-        <nb-card-item>
-          <nb-left>
-            <nb-text>{{ getTime(alarm) }}</nb-text>
-          </nb-left>
+      <touchable-opacity
+        v-for="alarm in alarms"
+        :key="alarm.id"
+        :on-long-press="() => onCardPress(alarm.id)"
+      >
+        <nb-card>
+          <nb-card-item>
+            <nb-left>
+              <nb-text>{{ getTime(alarm) }}</nb-text>
+            </nb-left>
 
-          <nb-body>
-            <nb-text>{{ alarm.label }}</nb-text>
-          </nb-body>
+            <nb-body>
+              <nb-text>{{ alarm.label }}</nb-text>
+            </nb-body>
 
-          <nb-right>
-            <nb-switch
-              :value="alarm.active"
-              :on-change="() => onSwitch(alarm.id)"
-            />
-          </nb-right>
-        </nb-card-item >
-     </nb-card>
+            <nb-right>
+              <nb-switch
+                :value="alarm.active"
+                :on-change="() => onSwitch(alarm.id)"
+              />
+            </nb-right>
+          </nb-card-item >
+        </nb-card>
+      </touchable-opacity>
     </nb-content>
 
      <nb-button
@@ -61,7 +67,11 @@ export default {
     ]),
 
     onAddPress () {
-      this.navigation.navigate('SetNewAlarmView')
+      this.navigation.navigate('SetAlarmView')
+    },
+
+    onCardPress (id) {
+      this.navigation.navigate('SetAlarmView', { id })
     },
 
     onSwitch (id) {

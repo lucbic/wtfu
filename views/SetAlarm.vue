@@ -53,28 +53,60 @@
         </nb-form>
       </nb-view>
 
+      <template v-if="alarmId">
+        <nb-button
+          large
+          icon-left
+          :style="{ marginTop: 40 }"
+          :onPress="onSavePress"
+        >
+          <nb-icon name="ios-checkmark-circle-outline"/>
+
+          <nb-text>
+            Salvar alterações
+          </nb-text>
+        </nb-button>
+
+        <nb-button
+          large
+          danger
+          icon-left
+          :style="{ marginTop: 20 }"
+          :onPress="onDeletePress"
+        >
+          <nb-icon name="ios-trash"/>
+
+          <nb-text>
+            Remover alarme
+          </nb-text>
+        </nb-button>
+      </template>
+
       <nb-button
+        v-else
         large
         icon-left
         :style="{ marginTop: 40 }"
         :onPress="onAddPress"
       >
-        <nb-icon name="add"/>
+        <nb-icon name="ios-add-circle-outline"/>
 
         <nb-text>
           Adicionar alarme
         </nb-text>
       </nb-button>
+
     </nb-content>
   </nb-container>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import { defaultHours, defaultMinutes } from '../content/timePickerData'
+import { Alert } from 'react-native'
 
 export default {
-  name: 'SetNewAlarmView',
+  name: 'SetAlarmView',
 
   props: {
     navigation: Object
@@ -85,10 +117,15 @@ export default {
     minuteSelected: 0,
     label: '',
     defaultHours,
-    defaultMinutes
+    defaultMinutes,
+    alarmId: null
   }),
 
   computed: {
+    ...mapGetters([
+      'getAlarm'
+    ]),
+
     formData () {
       return {
         label: this.label,
@@ -100,18 +137,74 @@ export default {
 
   methods: {
     ...mapMutations([
-      'setNewAlarm'
+      'setNewAlarm',
+      'deleteAlarm',
+      'editAlarm'
     ]),
 
     onHourChange (newHour) {
       this.hourSelected = newHour
     },
+
     onMinuteChange (newMinute) {
       this.minuteSelected = newMinute
     },
+
     onAddPress () {
       this.setNewAlarm(this.formData)
       this.navigation.navigate('MainView')
+    },
+
+    onSavePress () {
+      const payroll = {
+        id: this.alarmId,
+        label: this.label,
+        timeSet: {
+          hours: this.hourSelected,
+          minutes: this.minuteSelected
+        }
+      }
+
+      this.editAlarm(payroll)
+      this.navigation.navigate('MainView')
+    },
+
+    onDeletePress () {
+      Alert.alert(
+        'Deseja remover este alarme?',
+        null,
+        [
+          {
+            text: 'Cancelar',
+            style: 'cancel'
+          },
+          {
+            text: 'Remover',
+            onPress: () => {
+              this.deleteAlarm(this.alarmId)
+              this.navigation.navigate('MainView')
+            }
+          }
+        ],
+        {
+          cancelable: true 
+        }
+      )
+    }
+  },
+
+  mounted () {
+    const state = this.navigation.state || {}
+    const params = (state || {}).params
+    const alarmId = (params || {}).id
+
+    if (alarmId) {
+      const alarm = this.getAlarm(alarmId)
+
+      this.alarmId = alarmId
+      this.hourSelected = alarm.timeSet.hours
+      this.minuteSelected = alarm.timeSet.minutes
+      this.label = alarm.label
     }
   }
 }
