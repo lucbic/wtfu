@@ -2,6 +2,14 @@
   <nb-container>
     <nb-content class="wtfu__set-new-alarm-content">
       <nb-view>
+        <nb-title :style="{
+          marginTop: 10,
+          marginBottom: 40,
+          color: '#3a3a3a',
+        }">
+          {{ alarmId ? 'Editar alarme' : 'Novo alarme' }}
+        </nb-title>
+
         <nb-view :style="{ display: 'flex', flexDirection: 'row' }">
           <nb-label :style="{ flex: 1 }">
             Horas
@@ -186,14 +194,12 @@ export default {
             }
           }
         ],
-        {
-          cancelable: true 
-        }
+        { cancelable: true }
       )
     }
   },
 
-  mounted () {
+  beforeMount () {
     const state = this.navigation.state || {}
     const params = (state || {}).params
     const alarmId = (params || {}).id
@@ -213,7 +219,7 @@ export default {
 <style>
 .wtfu__set-new-alarm-content {
   flex: 1;
-  padding: 20px;
+  padding: 10px;
   background-color:lightslategray;
 }
 </style>

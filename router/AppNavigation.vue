@@ -13,11 +13,17 @@ import SetAlarmView from '../views/SetAlarm'
 
 const StackNavigator = createStackNavigator(
   {
-    MainView: { screen: MainView },
+    MainView: { screen: MainView, },
     SetAlarmView: { screen: SetAlarmView }
   },
   {
-    initialRouteName: 'MainView'
+    initialRouteName: 'MainView',
+    defaultNavigationOptions: {
+      title: 'WTFU',
+      headerStyle: { backgroundColor: '#6d54dd' },
+      headerTintColor: "#fff",
+      headerTitleStyle: { fontWeight: 'bold' }
+    }
   }
 )
 

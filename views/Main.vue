@@ -95,11 +95,12 @@ export default {
 
 .wtfu__content {
   position: relative;
-  padding: 20px;
+  padding: 10px;
   background-color:lightslategray;
 }
 
 .wtfu_add-button {
+  background-color: #6d54dd;
   width: 60px;
   height: 60px;
   position: absolute;
