@@ -11,3 +11,8 @@ export const generateUUID = () => {
 
   return defaultHash.replace(/[xy]/g, hashParser)
 }
+
+export const parseTime = val => {
+  const stringed = val.toString()
+  return stringed.length === 1 ? '0' + stringed : stringed
+}

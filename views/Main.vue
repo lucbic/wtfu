@@ -1,30 +1,13 @@
 <template>
   <nb-container>
     <nb-content class="wtfu__content">
-      <touchable-opacity
+      <alarm-card
         v-for="alarm in alarms"
         :key="alarm.id"
-        :on-long-press="() => onCardPress(alarm.id)"
-      >
-        <nb-card>
-          <nb-card-item>
-            <nb-left>
-              <nb-text>{{ getTime(alarm) }}</nb-text>
-            </nb-left>
-
-            <nb-body>
-              <nb-text>{{ alarm.label }}</nb-text>
-            </nb-body>
-
-            <nb-right>
-              <nb-switch
-                :value="alarm.active"
-                :on-change="() => onSwitch(alarm.id)"
-              />
-            </nb-right>
-          </nb-card-item >
-        </nb-card>
-      </touchable-opacity>
+        :alarm="alarm"
+        @on-press="onCardPress($event)"
+        @on-toggle="onToggle($event)"
+      />
     </nb-content>
 
      <nb-button
@@ -38,22 +21,19 @@
 </template>
 
 <script>
+import AlarmCard from '../components/AlarmCard'
 import { mapState, mapMutations } from 'vuex'
-
-const parseTime = val => {
-   const stringed = val.toString()
-   return stringed.length === 1 ? '0' + stringed : stringed
-}
 
 export default {
   name: 'MainView',
 
+  components: {
+    AlarmCard
+  },
+
   props: {
     navigation: Object
   },
-
-  data: () => ({
-  }),
 
   computed: {
     ...mapState([
@@ -74,16 +54,8 @@ export default {
       this.navigation.navigate('SetAlarmView', { id })
     },
 
-    onSwitch (id) {
+    onToggle (id) {
       this.toggleAlarm(id)
-    },
-
-    getTime ({ timeSet }) {
-      const { hours, minutes } = timeSet
-      const parsedHours = parseTime(hours)
-      const parsedMinutes = parseTime(minutes)
-
-      return `${parsedHours}:${parsedMinutes}`
     }
   }
   
